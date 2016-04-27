@@ -1327,7 +1327,25 @@ and dependencies (minified).
 						docDrag=1;
 						$this.addClass("mCS_touch_action");
 					}
-					if(touchAction){e.preventDefault();} 
+
+					var swipeDirection = 'side';
+					var r = Math.atan2(touchIntent[2], touchIntent[3]);
+					var swipeAngle = Math.round(r * 180 / Math.PI);
+
+					if (swipeAngle < 0) {
+						swipeAngle = 360 - Math.abs(swipeAngle);
+					}
+
+					if( (swipeAngle > 45) && (swipeAngle < 135) ) {
+						swipeDirection = 'down';
+					} else if( (swipeAngle > 225) && (swipeAngle < 315) ) {
+						swipeDirection = 'up';
+					}
+
+					if (!( (o.axis==="x") && (swipeDirection != 'side') )) {
+						if(touchAction){e.preventDefault();}
+					}
+
 					amount=o.axis==="yx" ? [(dragY-y),(dragX-x)] : o.axis==="x" ? [null,(dragX-x)] : [(dragY-y),null];
 					mCSB_container[0].idleTimer=250;
 					if(d.overflowed[0]){_drag(amount[0],durA,easing,"y","all",true);}
